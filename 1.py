@@ -8,7 +8,7 @@ def printMatrix(mx):
         for j in range(n):
             print("%7.3f" % mx[i][j], end=" ")
         print("|")
-    print("ㄴ" + "        " * n + "^")
+    print("ㄴ" + "        " * n + "┘")
 
 def getTransposeMatrix(matrix):
     n = len(matrix)
@@ -31,15 +31,12 @@ def getMatrixDeterminant(matrix):
 def has_inverse(matrix):
     det = getMatrixDeterminant(matrix)
     if abs(det) < EPS:
-        print("오류! 행렬식이 0이므로 역행렬을 구할 수 없습니다.")
-        return False, det
-    return True, det
+        return False
+    return True
 
 def inverse_by_determinant(m):
     n = len(m)
     det = getMatrixDeterminant(m)
-    if abs(det) < EPS:
-        raise ValueError("특이 행렬입니다: 행렬식이 0입니다.")
     if n == 1:
         return [[1.0 / m[0][0]]]
     if n == 2:
@@ -114,21 +111,19 @@ def read_square_matrix():
 def main():
     try:
         A = read_square_matrix()
-        ok, det = has_inverse(A)
-        if not ok:
-            return
+        if not has_inverse(A) :
+            print("오류! 행렬식이 0이므로 역행렬을 구할 수 없습니다.")
+            return 
 
-        print("\n[가우스-조던 소거법으로 구한 역행렬]\n")
+        print("\n[가우스-조던 소거법으로 구한 역행렬] : \n")
         inv_gj = inverse_by_gauss_jordan(A)
         printMatrix(inv_gj)
 
-        print("\n[행렬식(여인수/수반행렬)으로 구한 역행렬]\n")
+        print("\n[행렬식으로 구한 역행렬] : \n")
         inv_det = inverse_by_determinant(A)
         printMatrix(inv_det)
 
-        same = are_same(inv_gj, inv_det)
-        print("\n[결과 비교]")
-        if same:
+        if are_same(inv_gj, inv_det) :
             print("두 방법의 결과가 동일합니다.")
         else:
             print("두 방법의 결과가 다릅니다.")
