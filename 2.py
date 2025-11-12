@@ -2,13 +2,13 @@ def matrix_print(mx, title=None):
     if title:
         print(title)
     n = len(mx)
-    print("𐌲" + "        " * n + "ㄱ")
+    print("𐌲" + "       " * 4 + "ㄱ")
     for i in range(n):
         print("|", end=" ")
         for j in range(n):
-            print("%7d" % (1 if mx[i][j] else 0), end=" ")
-        print("|")
-    print("ㄴ" + "        " * n + "┘")
+            print("%4d" % (1 if mx[i][j] else 0), end=" ")
+        print("   |")
+    print("ㄴ" + "       " * 4 + "┘")
 
 def is_reflexive(matrix) :
     for i in range(5) :
@@ -34,28 +34,28 @@ def is_transitive(matrix):
     return True
 
 
-def reflexive_closure(matrix, verbose = True) :
+def reflexive_closure(matrix) :
     added = []
     for i in range(5) :
         if matrix[i][i] == 0 :
             matrix[i][i] = 1
             added.append((i, i))
-    if verbose and added :
+    if added :
         print("반사적 폐포 추가:", [(i+1, j+1) for i, j in added])
     return matrix
 
-def symmetric_closure(matrix, verbose = True) :
+def symmetric_closure(matrix) :
     added = []
     for i in range(5) :
         for j in range(5) :
             if matrix[i][j] == 1 and matrix[j][i] == 0 :
                 matrix[j][i] = 1
                 added.append((j, i))
-    if verbose and added:
+    if added:
         print("대칭적 폐포 추가:", [(i+1, j+1) for i, j in added])
     return matrix
 
-def transitive_closure(matrix, verbose=True):
+def transitive_closure(matrix):
     n = len(matrix)
     added = []
     for k in range(n):
@@ -64,18 +64,15 @@ def transitive_closure(matrix, verbose=True):
                 if matrix[i][k] and matrix[k][j] and matrix[i][j] == 0:
                     matrix[i][j] = 1
                     added.append((i, j))
-    if verbose and added:
+    if added :
         print("추이적 폐포 추가:", [(i+1, j+1) for i, j in added])
     return matrix
 
 def equivalence_classes(matrix):
-    classes = []
     for i in range(5) :
         cls = [j for j in range(5) if matrix[i][j] == 1]
         print(f"{i+1}의 동치류 → {{{', '.join(str(x+1) for x in cls)}}}")
-        classes.append(cls)
     print()
-    return classes
 
 def read_matrix(n) :
     matrix = []
@@ -106,21 +103,18 @@ def main():
     print("\n이 관계는 동치관계가 아닙니다. 폐포를 적용합니다.")
 
     if not r:
-        before = [row[:] for row in matrix]
-        matrix_print(before, "\n반사적 폐포 적용 전:")
-        reflexive_closure(matrix, verbose=True)
+        matrix_print(matrix, "\n반사적 폐포 적용 전:")
+        reflexive_closure(matrix)
         matrix_print(matrix, "반사적 폐포 적용 후:")
 
     if not s:
-        before = [row[:] for row in matrix]
-        matrix_print(before, "\n대칭적 폐포 적용 전:")
-        symmetric_closure(matrix,  verbose=True)
+        matrix_print(matrix, "\n대칭적 폐포 적용 전:")
+        symmetric_closure(matrix)
         matrix_print(matrix, "대칭적 폐포 적용 후:")
 
     if not t:
-        before = [row[:] for row in matrix]
-        matrix_print(before, "\n추이적 폐포 적용 전:")
-        transitive_closure(matrix, verbose=True)
+        matrix_print(matrix, "\n추이적 폐포 적용 전:")
+        transitive_closure(matrix)
         matrix_print(matrix, "추이적 폐포 적용 후:")
 
     print("\n폐포 적용 후 다시 판별:")
